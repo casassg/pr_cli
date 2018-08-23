@@ -6,7 +6,7 @@ from github import GithubException
 
 
 def _get_token(app_name):
-    user = click.prompt('GitHub Email')
+    user = click.prompt('GitHub Email/GitHub Username')
     password = click.prompt('Password', hide_input=True)
     g = Github(user, password)
     user = g.get_user()
@@ -35,7 +35,8 @@ def login(app_name, login):
     except GithubException:
         click.echo('Authentification expired')
         token =  _get_token(app_name)
+    conf.update({'token':token})
     with open(conf_filename, 'w') as f:
-        json.dump({'token':token}, f)
+        json.dump(conf, f)
     return Github(token)
 
