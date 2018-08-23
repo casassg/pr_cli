@@ -1,3 +1,5 @@
 env/
-.project
+.vscode
 .idea
+__pycache__
+*.pyc
