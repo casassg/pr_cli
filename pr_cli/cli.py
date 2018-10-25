@@ -33,7 +33,10 @@ def diff(user):
     actions.check_uncommit_files()
 
     # Push new commits if needed
-    updated = actions.update_branch()
+    try:
+        updated = git.update_branch()
+    except RuntimeError as e:
+        raise click.ClickException(str(e))
     if updated:
         click.echo('Pushed changes to remote!')
     else:
