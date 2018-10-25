@@ -21,7 +21,6 @@ def is_current_branch_updated(user):
 def current_pr(user, base='master'):
     repo = current_repo(user)
     branch = git.current_branch()
-    for pr in repo.get_pulls():
-        if pr.base.label == base and pr.head.label == git.current_branch():
-            return pr
-    return None
+    pulls = repo.get_pulls(base=base,head=branch)
+    return pulls[0]
+       

@@ -61,11 +61,13 @@ def diff(user):
         comment = None
         if message:
             comment = message.split(MARKER, 1)[0].rstrip('\n')
-        lines = comment.split('\n')
+            lines = comment.split('\n')
+        else:
+            raise click.ClickException('Aborting')
 
         body ='\n'.join(lines[1:]).rstrip('\n')
         pr = repo.create_pull(title=lines[0], body=body, head=current_branch, base='master')
     else:
         click.echo('Nothing changed!')
     
-    click.echo('Pull request updated, see: %s' % pr.url)
+    click.echo('Pull request updated, see: %s' % pr.html_url)
