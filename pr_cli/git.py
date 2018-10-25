@@ -32,16 +32,13 @@ def check_untracked_modified(ignore=False):
         if unt: click.echo('Untracked files:')
         for f in unt:
             click.echo(f)
-        if unt: click.echo('\n')
         if mods: click.echo('Modified files:')
         for f in mods:
             click.echo(f)
-        if mods: click.echo('\n')
         click.echo('You have untracked and/or modified files.')
         if not click.confirm('Are you sure you want to continue?'):
             raise click.ClickException('Solve ignored/modified files before proceeding')
-        click.echo('\n')
-    tbc = get_to_be_commit_files()
+    tbc = list(filter(None, get_to_be_commit_files()))
     if tbc:
         click.echo('To be commit files:')
         for f in tbc:

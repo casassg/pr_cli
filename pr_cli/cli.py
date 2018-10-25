@@ -63,17 +63,8 @@ def diff(user):
             comment = message.split(MARKER, 1)[0].rstrip('\n')
         lines = comment.split('\n')
 
-        try:
-            body ='\n'.join(lines[1:]).rstrip('\n')
-            pr = repo.create_pull(title=lines[0], body=body, head=current_branch, base='master')
-        except GithubException as e:
-            if e.status == 404:
-                raise click.ClickException('No changes between %s and %s' % ('master', current_branch))
-            else:
-                raise e
-
-
-        
+        body ='\n'.join(lines[1:]).rstrip('\n')
+        pr = repo.create_pull(title=lines[0], body=body, head=current_branch, base='master')
     else:
         click.echo('Nothing changed!')
     

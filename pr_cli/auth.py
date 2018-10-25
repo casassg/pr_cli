@@ -15,7 +15,7 @@ def _get_token(app_name):
     except GithubException.BadCredentialsException:
         raise click.ClickException('Bad credentials, make sure your username and password are correct')
     auth.delete()
-    auth = user.create_authorization(note=app_name)
+    auth = user.create_authorization(note=app_name, scopes=['repo', 'gist'])
     return auth.token
 
 def login(app_name, login):
