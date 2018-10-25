@@ -1,5 +1,4 @@
 import git
-import click
 from github import GithubException
 
 def current_repo(user):

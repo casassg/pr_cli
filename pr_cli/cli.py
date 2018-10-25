@@ -7,6 +7,7 @@ import auth
 import decorators
 import git
 import gh
+import actions
 
 from github import GithubException
 
@@ -30,12 +31,12 @@ def diff(user):
     repo = gh.current_repo(user)
 
     # Check for un commited files   
-    git.check_uncommit_files()
+    actions.check_uncommit_files()
 
     # Push new commits if needed
     if not gh.is_current_branch_updated(user):
         click.echo('Updating current branch...')
-        git.update_branch()
+        actions.update_branch()
         click.echo('Updating current branch...Done!')
         updated = True
     else:
@@ -81,4 +82,5 @@ def diff(user):
         body ='\n'.join(lines[1:]).rstrip('\n')
         pr = repo.create_pull(title=lines[0], body=body, head=current_branch, base='master')
     
+    # Print current PR URL for user
     click.echo('Pull request updated, see: %s' % pr.html_url)
