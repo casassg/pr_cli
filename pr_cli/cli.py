@@ -80,7 +80,5 @@ def diff(user):
 
         body ='\n'.join(lines[1:]).rstrip('\n')
         pr = repo.create_pull(title=lines[0], body=body, head=current_branch, base='master')
-    else:
-        click.echo('Nothing changed!')
     
     click.echo('Pull request updated, see: %s' % pr.html_url)
