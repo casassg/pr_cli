@@ -49,14 +49,15 @@ def diff(user):
     # Try to find existing PR for current branch
     pr = gh.current_pr(user)
 
+    # Ask if it should open PR when closed
+    if pr and pr.state == 'closed':
+        if click.confirm('PR is closed, do you want to reopen it?'): pr.edit(state='open')
+
+
     # Add comment if wanted
-    if pr and updated and click.confirm('Do you want to comment current changes?'):
-        if pr.state == 'closed':
-            if click.confirm('PR is closed, do you want to reopen it?'):
-                pr.edit(state='open')
-            else:
-                raise click.ClickException('PR is closed. See: %s' % pr.html_url)
-        MARKER = '# Everything below is ignored. Comment above what are your changes (or leave it blank)'
+    if pr and updated and click.confirm('Do you want to add comment about current changes in PR?'):
+
+        MARKER = '# Everything below is ignored. Comment above what are your changes (or leave it blank to skip)'
         message = click.edit('\n\n' + MARKER)
         comment = None
         if message:
