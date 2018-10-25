@@ -42,18 +42,8 @@ def diff(user):
     else:
         click.echo('Branch %s is already updated!' % current_branch)
     
-    # Check if it needs a PR
-    c = repo.compare('master',current_branch)
-    if c.total_commits == 0:
-        raise click.ClickException('Master and %s are totally synced. Commit some changes to start a PR.' % current_branch)
-    
     # Try to find existing PR for current branch
     pr = gh.current_pr(user)
-
-    # Ask if it should open PR when closed
-    # if pr and pr.state == 'closed':
-    #     if click.confirm('PR is closed, do you want to reopen it?'): pr.edit(state='open')
-
 
     # Add comment if wanted
     if pr and updated and click.confirm('Do you want to add comment about current changes in PR?'):
@@ -70,6 +60,12 @@ def diff(user):
 
     # Create new Pull request
     elif not pr:
+         # Check if it needs a PR
+        c = repo.compare('master',current_branch)
+        if c.total_commits == 0: 
+            raise click.ClickException('Master and %s are totally synced. Commit some changes to start a PR.' % current_branch)
+
+        # Get PR title and body
         MARKER = '# Everything below is ignored. First line is title, after that is body of pull request'
         message = click.edit('\n\n' + MARKER)
         comment = None
