@@ -1,5 +1,5 @@
 import git
-
+import click
 from github import GithubException
 
 def current_repo(user):
@@ -17,3 +17,11 @@ def is_current_branch_updated(user):
         return False
     local_sha = git.current_sha()
     return branch.commit.sha == local_sha
+
+def current_pr(user, base='master'):
+    repo = current_repo(user)
+    branch = git.current_branch()
+    for pr in repo.get_pulls():
+        if pr.base.label == base and pr.head.label == git.current_branch():
+            return pr
+    return None
