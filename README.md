@@ -1,6 +1,6 @@
 # GitHub Flow CLI
 
-CLI that helps make the flow described at [GitHub Flow](https://guides.github.com/introduction/flow/).
+CLI that helps make the flow described at [GitHub Flow](https://guides.github.com/introduction/flow/). CLI interface inspired by [Phabricator's arcanist CLI](https://github.com/phacility/arcanist).
 
 ## Usage
 
