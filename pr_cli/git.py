@@ -60,4 +60,6 @@ def create_branch(branch_name):
 
 def pull_branch(branch):
     c = delegator.run('git pull origin %s' % branch)
+    if c.return_code!=0:
+        raise RuntimeError(c.out)
     return c.out

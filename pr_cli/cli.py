@@ -91,6 +91,9 @@ def diff(user):
 def feature(user, base, name):
     username = user.login
     branch = git.current_branch()
+    new_branch = '%s/%s' % (username, name)
+    # todo: Check if new branch exists locally and/or remotely and check out there instead of creating new branch
+
     if branch != base:
         click.echo('Current branch (%s) different than base. Checking out %s' % (branch,base))
         try:
@@ -98,9 +101,13 @@ def feature(user, base, name):
         except RuntimeError as e:
             raise click.ClickException(str(e))
     
-    git.pull_branch(base)
+    click.echo('Updating %s' % base)
+    try:
+        out = git.pull_branch(base)
+        click.echo(out)
+    except RuntimeError as e:
+            raise click.ClickException(str(e))
 
-    new_branch = '%s/%s' % (username, name)
     git.create_branch(new_branch)
     click.echo('New branch created: %s' % new_branch)
 
