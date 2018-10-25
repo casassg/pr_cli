@@ -25,7 +25,7 @@ def get_to_be_commit_files():
     c = delegator.run('git diff --cached --name-only --raw')
     return c.out.strip().split('\n')
 
-def check_untracked_modified(ignore=False):
+def check_uncommit_files(ignore=False):
     unt = list(filter(None, get_untracked_files()))
     mods = list(filter(None, get_modified_files()))
     if (unt or mods) and not ignore:

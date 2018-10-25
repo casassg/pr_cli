@@ -29,33 +29,45 @@ def diff(user):
     current_branch = git.current_branch()
     repo = gh.current_repo(user)
 
-    git.check_untracked_modified()
+    # Check for un commited files   
+    git.check_uncommit_files()
 
+    # Push new commits if needed
     if not gh.is_current_branch_updated(user):
         click.echo('Updating current branch...')
         git.update_branch()
         click.echo('Updating current branch...Done!')
         updated = True
     else:
-        click.echo('Branch %s is updated!' % current_branch)
+        click.echo('Branch %s is already updated!' % current_branch)
     
+    # Check if it needs a PR
     c = repo.compare('master',current_branch)
     if c.total_commits == 0:
         raise click.ClickException('Master and %s are totally synced. Commit some changes to start a PR.' % current_branch)
     
+    # Try to find existing PR for current branch
     pr = gh.current_pr(user)
-    if pr and updated:
-        MARKER = '# Everything below is ignored. Comment above what are your changes'
+
+    # Add comment if wanted
+    if pr and updated and click.confirm('Do you want to comment current changes?'):
+        if pr.state == 'closed':
+            if click.confirm('PR is closed, do you want to reopen it?'):
+                pr.edit(state='open')
+            else:
+                raise click.ClickException('PR is closed. See: %s' % pr.html_url)
+        MARKER = '# Everything below is ignored. Comment above what are your changes (or leave it blank)'
         message = click.edit('\n\n' + MARKER)
         comment = None
         if message:
             comment = message.split(MARKER, 1)[0].rstrip('\n')
-        if not message or not comment:
+        if not comment:
             click.echo('No comments to be added!')
         else:
             pr.create_issue_comment(comment)
+
+    # Create new Pull request
     elif not pr:
-        
         MARKER = '# Everything below is ignored. First line is title, after that is body of pull request'
         message = click.edit('\n\n' + MARKER)
         comment = None
