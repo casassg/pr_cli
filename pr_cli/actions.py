@@ -47,7 +47,7 @@ def update_branch():
             return False
         elif flag == '!':
             raise click.ClickException("Branch was rejected. Pull branch: git pull origin %s" % current_branch)
-        elif flag in ['*','-','+']:
+        elif flag in ['*','-','+', ' ']:
             return True
         else:
             raise click.ClickException(c.out)
