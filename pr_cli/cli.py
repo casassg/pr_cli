@@ -51,8 +51,8 @@ def diff(user):
     pr = gh.current_pr(user)
 
     # Ask if it should open PR when closed
-    if pr and pr.state == 'closed':
-        if click.confirm('PR is closed, do you want to reopen it?'): pr.edit(state='open')
+    # if pr and pr.state == 'closed':
+    #     if click.confirm('PR is closed, do you want to reopen it?'): pr.edit(state='open')
 
 
     # Add comment if wanted
