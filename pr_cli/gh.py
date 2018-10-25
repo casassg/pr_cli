@@ -21,8 +21,8 @@ def current_pr(user, base='master'):
     repo = current_repo(user)
     branch = git.current_branch()
     pulls = repo.get_pulls(base=base,head=branch, state='open')
-    if pulls:
+    try:
         return pulls[0]
-    else:
+    except IndexError:
         return None
        
