@@ -37,7 +37,7 @@ def update_branch():
         if flag == '=':
             return False
         elif flag == '!':
-            raise RuntimeError("Branch was rejected. Pull branch: git pull origin %s" % current_branch)
+            raise RuntimeError(c.out)
         elif flag in ['*','-','+', ' ']:
             return True
         else:
