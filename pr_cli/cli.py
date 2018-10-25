@@ -25,17 +25,19 @@ def pr_cli(ctx, login):
 @pr_cli.command()
 @decorators.pass_client
 def diff(user):
+    updated = False
     current_branch = git.current_branch()
     repo = gh.current_repo(user)
-    updated = gh.is_current_branch_updated(user)
+
     # Check for un commited files   
     git.check_uncommit_files()
 
     # Push new commits if needed
-    if not updated:
+    if not gh.is_current_branch_updated(user):
         click.echo('Updating current branch...')
         git.update_branch()
         click.echo('Updating current branch...Done!')
+        updated = True
     else:
         click.echo('Branch %s is already updated!' % current_branch)
     
