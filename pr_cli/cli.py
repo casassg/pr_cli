@@ -28,7 +28,6 @@ def pr_cli(ctx, login):
 def diff(user):
     updated = False
     current_branch = git.current_branch()
-    repo = gh.current_repo(user)
 
     # Check for un commited files   
     actions.check_uncommit_files()
@@ -58,6 +57,8 @@ def diff(user):
 
     # Create new Pull request
     elif not pr:
+        repo = gh.current_repo(user)
+
          # Check if it needs a PR
         c = repo.compare('master',current_branch)
         if c.total_commits == 0: 
