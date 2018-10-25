@@ -34,11 +34,9 @@ def diff(user):
     actions.check_uncommit_files()
 
     # Push new commits if needed
-    if not gh.is_current_branch_updated(user):
-        click.echo('Updating current branch...')
-        actions.update_branch()
-        click.echo('Updating current branch...Done!')
-        updated = True
+    updated = actions.update_branch()
+    if updated:
+        click.echo('Pushed changes to remote!')
     else:
         click.echo('Branch %s is already updated!' % current_branch)
     

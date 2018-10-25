@@ -33,8 +33,23 @@ def check_uncommit_files(ignore=False):
                 raise click.ClickException('Commit errored')
 
 def update_branch():
-    c = delegator.run('git push -u origin %s' % git.current_branch())
-    click.echo(c.out)
+    current_branch = git.current_branch()
+    c = delegator.run('git push --porcelain -u origin %s' % current_branch)
+    
     if c.return_code != 0:
         click.echo(c.err)
-        raise click.ClickException('There was an error pushing the current branch')
+        raise click.ClickException(c.err)
+
+    try:
+        lines = c.out.split('\n')
+        flag = lines[1].split('\t')[0]
+        if flag == '=':
+            return False
+        elif flag == '!':
+            raise click.ClickException("Branch was rejected. Pull branch: git pull origin %s" % current_branch)
+        elif flag in ['*','-','+']:
+            return True
+        else:
+            raise click.ClickException(c.out)
+    except:
+        raise click.ClickException(c.out)
