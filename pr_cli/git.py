@@ -46,4 +46,18 @@ def update_branch():
         raise RuntimeError(c.out)
     
 
-    
+def checkout_branch(branch):
+    delegator.run('git stash')
+    c = delegator.run('git checkout %s' % branch)
+    delegator.run('git stash pop')
+    if c.return_code!=0:
+        raise RuntimeError(c.out)
+
+def create_branch(branch_name):
+    c = delegator.run('git checkout -b %s' % branch_name)
+    if c.return_code!=0:
+        raise RuntimeError(c.out)
+
+def pull_branch(branch):
+    c = delegator.run('git pull origin %s' % branch)
+    return c.out

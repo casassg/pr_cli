@@ -82,3 +82,30 @@ def diff(user):
     
     # Print current PR URL for user
     click.echo('Pull request updated, see: %s' % pr.html_url)
+
+
+@pr_cli.command()
+@click.option('--base', '-b', default='master', help='Branch to checkout the code from.')
+@click.argument('name')
+@decorators.pass_client
+def feature(user, base, name):
+    username = user.login
+    branch = git.current_branch()
+    if branch != base:
+        click.echo('Current branch (%s) different than base. Checking out %s' % (branch,base))
+        try:
+            git.checkout_branch(base)
+        except RuntimeError as e:
+            raise click.ClickException(str(e))
+    
+    git.pull_branch(base)
+
+    new_branch = '%s/%s' % (username, name)
+    git.create_branch(new_branch)
+    click.echo('New branch created: %s' % new_branch)
+
+
+    
+        
+    
+    
