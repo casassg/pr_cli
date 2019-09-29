@@ -19,3 +19,10 @@ CLI that helps make the flow described at [GitHub Flow](https://guides.github.co
     - `--base, -b`: Branch to checkout the code from. Defaults to `master`.
 - `gh paste`: Create github gist. Returns url for new gist
     - `--file, -f`: Add file to gist. If no file is defined, an empty editor will be opened and sent to creation.
+
+## Development
+
+Requirements: `python3.7`, `pipenv`
+
+1. `pipenv install`
+2. `pipenv run gh`
