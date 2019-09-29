@@ -9,9 +9,6 @@ import git
 import gh
 import actions
 
-from github import GithubException
-
-
 __version__ = 'None'
 
 APP_NAME = 'pr_cli'
@@ -22,6 +19,7 @@ APP_NAME = 'pr_cli'
 @click.pass_context
 def pr_cli(ctx, login):
     ctx.obj = auth.login(APP_NAME, login).get_user()
+
 
 @pr_cli.command()
 @decorators.pass_client
@@ -70,10 +68,11 @@ def diff(user):
     elif not pr:
         repo = gh.current_repo(user)
 
-         # Check if it needs a PR
-        c = repo.compare('master',current_branch)
-        if c.total_commits == 0: 
-            raise click.ClickException('Master and %s are totally synced. Commit some changes to start a PR.' % current_branch)
+        # Check if it needs a PR
+        c = repo.compare('master', current_branch)
+        if c.total_commits == 0:
+            raise click.ClickException(
+                'Master and %s are totally synced. Commit some changes to start a PR.' % current_branch)
 
         # Get PR title and body
         MARKER = '# Everything below is ignored. First line is title, after that is body of pull request'
@@ -85,8 +84,8 @@ def diff(user):
         else:
             raise click.ClickException('Aborting')
 
-        body ='\n'.join(lines[1:]).rstrip('\n')
+        body = '\n'.join(lines[1:]).rstrip('\n')
         pr = repo.create_pull(title=lines[0], body=body, head=current_branch, base='master')
-    
+
     # Print current PR URL for user
     click.echo('Pull request updated, see: %s' % pr.html_url)
