@@ -26,8 +26,11 @@ def pr_cli(ctx, login):
 @pr_cli.command()
 @decorators.pass_client
 def diff(user):
-    updated = False
     current_branch = git.current_branch()
+
+    # Check if we are on master and warn user
+    if current_branch == 'master' and not click.confirm('You are on master branch, are you sure you want to continue?'):
+        raise click.ClickException("Switch branches before continuing")
 
     # Check for un commited files   
     actions.check_uncommit_files()
@@ -41,7 +44,12 @@ def diff(user):
         click.echo('Pushed changes to remote!')
     else:
         click.echo('Branch %s is already updated!' % current_branch)
-    
+
+    # Check if on master and exit in that case
+    if current_branch == 'master':
+        click.echo('No pull request as you are on master already')
+        return
+
     # Try to find existing PR for current branch
     pr = gh.current_pr(user)
 
